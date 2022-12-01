@@ -8,25 +8,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
       - name: Install npm dependencies
         run: |
           npm install
-  build-android:
-    needs: install-and-test
-    runs-on: ubuntu-latest
-    steps: 
-      - uses: actions/checkout@v2
-      - name: Install npm dependencies
+          
+      - name : Retrieve Version
         run: |
-          npm install
-      - name: Build Android Release
+         echo "::set-output name=VERSION_NAME::$(${{github.workspace}}/gradlew -q printVersionName)"
+        id: android_version
+        
+      - name: Get version
         run: |
-          cd android && ./gradlew assembleRelease
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: app-release.apk
-          path: android/app/build/outputs/apk/release/
+          echo "version_name=${{steps.android_version.outputs.VERSION_NAME}}" >> $GITHUB_ENV
+        
+#   build-android:
+#     needs: install-and-test
+#     runs-on: ubuntu-latest
+#     steps: 
+#       - uses: actions/checkout@v2
+#       - name: Install npm dependencies
+#         run: |
+#           npm install
+#       - name: Build Android Release
+#         run: |
+#           cd android && ./gradlew assembleRelease
+#       - name: Upload Artifact
+#         uses: actions/upload-artifact@v1
+#         with:
+#           name: app-release.apk
+#           path: android/app/build/outputs/apk/release/
