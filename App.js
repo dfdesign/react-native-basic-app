@@ -11,7 +11,7 @@ let items = [
   },
   {
     name: 'Samsung',
-    contry: 'South Korea'
+    contry: 'South Korea'   
   }
 ]
 
